@@ -2115,7 +2115,8 @@ check_log_statement(List *stmt_list)
 
 /*
  * check_log_duration
- *		Determine whether current command's duration should be logged
+ *		Determine whether current command's duration should be logged.
+ *		If log_sample_rate < 1.0, log only a sample.
  *
  * Returns:
  *		0 if no logging is needed
@@ -2147,11 +2148,16 @@ check_log_duration(char *msec_str, bool was_logged)
 		 * This odd-looking test for log_min_duration_statement being exceeded
 		 * is designed to avoid integer overflow with very long durations:
 		 * don't compute secs * 1000 until we've verified it will fit in int.
+		 * Do not log if log_sample_rate = 0.
+		 * Log a sample if log_sample_rate <= 1 and avoid unecessary random()
+		 * call if log_sample_rate = 1.
 		 */
 		exceeded = (log_min_duration_statement == 0 ||
 					(log_min_duration_statement > 0 &&
 					 (secs > log_min_duration_statement / 1000 ||
-					  secs * 1000 + msecs >= log_min_duration_statement)));
+					  secs * 1000 + msecs >= log_min_duration_statement))) &&
+				   log_sample_rate != 0 && (log_sample_rate == 1 ||
+				   random() <= log_sample_rate * MAX_RANDOM_VALUE);
 
 		if (exceeded || log_duration)
 		{

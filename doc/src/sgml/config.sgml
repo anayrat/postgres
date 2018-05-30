@@ -5190,6 +5190,25 @@ local0.*    /var/log/postgresql
        </listitem>
       </varlistentry>
 
+     <varlistentry id="guc-log-sample-rate" xreflabel="log_sample_rate">
+      <term><varname>log_sample_rate</varname> (<type>real</type>)
+      <indexterm>
+       <primary><varname>log_sample_rate</varname> configuration parameter</primary>
+      </indexterm>
+      </term>
+       <listitem>
+        <para>
+         Causes logging a fraction of the statements when log_min_duration_statement
+         is used. The default is 1, meaning log all statements longer than
+         log_min_duration_statement. Setting this to zero disable logging, same
+         as setting log_min_duration_statement to Minus-one.
+         Using log_sample_rate less than 1 can be helpful to log a sample of short
+         queries when the traffic is to important to log all queries (for example,
+         if you want queries parameters).
+        </para>
+       </listitem>
+      </varlistentry>
+
      </variablelist>
 
     <para>
