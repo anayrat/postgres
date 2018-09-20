@@ -1056,6 +1056,18 @@ same commits as above
 
       </listitem>
 
+      <listitem>
+<!--
+2017-08-21 [1f6d515a67] Push limit through subqueries to underlying sort
+-->
+
+       <para>
+        Push LIMIT through subqueries to underlying sort (if there is no filtering
+        predicate or SRF).
+       </para>
+
+      </listitem>
+
      </itemizedlist>
 
     </sect4>
