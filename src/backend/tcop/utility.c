@@ -417,7 +417,6 @@ standard_ProcessUtility(PlannedStmt *pstmt,
 					case TRANS_STMT_START:
 						{
 							ListCell   *lc;
-
 							BeginTransactionBlock();
 							foreach(lc, stmt->options)
 							{

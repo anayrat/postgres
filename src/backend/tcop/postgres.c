@@ -100,7 +100,7 @@ int			max_stack_depth = 100;
 /* wait N seconds to allow attach from a debugger */
 int			PostAuthDelay = 0;
 
-
+bool		xact_is_sampled = false;
 
 /* ----------------
  *		private variables
@@ -2218,7 +2218,8 @@ check_log_statement(List *stmt_list)
 int
 check_log_duration(char *msec_str, bool was_logged)
 {
-	if (log_duration || log_min_duration_statement >= 0)
+	if (log_duration || log_min_duration_statement >= 0 ||
+		log_xact_sample_rate >=0 )
 	{
 		long		secs;
 		int			usecs;
@@ -2252,11 +2253,11 @@ check_log_duration(char *msec_str, bool was_logged)
 			(log_statement_sample_rate == 1 ||
 			 random() <= log_statement_sample_rate * MAX_RANDOM_VALUE);
 
-		if ((exceeded && in_sample) || log_duration)
+		if ((exceeded && in_sample) || log_duration || xact_is_sampled)
 		{
 			snprintf(msec_str, 32, "%ld.%03d",
 					 secs * 1000 + msecs, usecs % 1000);
-			if (exceeded && !was_logged)
+			if ((exceeded || xact_is_sampled) && !was_logged)
 				return 2;
 			else
 				return 1;
