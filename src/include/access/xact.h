@@ -54,6 +54,7 @@ extern PGDLLIMPORT int XactIsoLevel;
 extern bool DefaultXactReadOnly;
 extern bool XactReadOnly;
 
+/* flag for logging statement in this transaction */
 extern bool xact_is_sampled;
 
 /*
